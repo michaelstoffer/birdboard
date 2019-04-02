@@ -16,6 +16,7 @@ class TaskTest extends TestCase
     public function it_belongs_to_a_project()
     {
         $task = factory(Task::class)->create();
+
         $this->assertInstanceOf(Project::class, $task->project);
     }
 
@@ -23,6 +24,7 @@ class TaskTest extends TestCase
     public function it_has_a_path()
     {
         $task = factory(Task::class)->create();
+
         $this->assertEquals('/projects/'.$task->project->id.'/tasks/'.$task->id, $task->path());
     }
 }
