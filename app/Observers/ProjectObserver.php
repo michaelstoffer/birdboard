@@ -18,6 +18,17 @@ class ProjectObserver
     }
 
     /**
+     * Handle the project "updating" event.
+     *
+     * @param  \App\Project  $project
+     * @return void
+     */
+    public function updating(Project $project)
+    {
+        $project->old = $project->getOriginal();
+    }
+
+    /**
      * Handle the project "updated" event.
      *
      * @param  \App\Project  $project
@@ -36,7 +47,7 @@ class ProjectObserver
      */
     public function deleted(Project $project)
     {
-        $project->recordActivity('deleted');
+        // $project->recordActivity('deleted');
     }
 
     /**
@@ -47,7 +58,7 @@ class ProjectObserver
      */
     public function restored(Project $project)
     {
-        $project->recordActivity('restored');
+        // $project->recordActivity('restored');
     }
 
     /**
@@ -58,6 +69,6 @@ class ProjectObserver
      */
     public function forceDeleted(Project $project)
     {
-        $project->recordActivity('forceDeleted');
+        // $project->recordActivity('forceDeleted');
     }
 }
