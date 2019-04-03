@@ -29,6 +29,11 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    /**
+	 * Get all projects owner by the user.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
     public function projects()
     {
         return $this->hasMany(Project::class, 'owner_id')->latest('updated_at');
