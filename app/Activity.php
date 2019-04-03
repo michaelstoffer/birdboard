@@ -18,8 +18,15 @@ class Activity extends Model
      *
      * @var array
      */
-    protected $casts = ['changes' => 'array'];
+    protected $casts = [
+        'changes' => 'array'
+    ];
 
+    /**
+     * Get the subject of the activity.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
     public function subject()
     {
         return $this->morphTo();

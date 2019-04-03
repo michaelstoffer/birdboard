@@ -7,6 +7,7 @@
                 <a href="/projects" class="text-grey text-sm font-normal no-underline hover:underline">My Projects</a>
                 / {{ $project->title }}
             </p>
+
             <a href="{{ $project->path().'/edit' }}" class="button">Edit Project</a>
         </div>
     </header>
@@ -24,7 +25,7 @@
                                 @method('PATCH')
                                 @csrf
 
-                                <div class="flex">
+                                <div class="flex items-center">
                                     <input name="body" value="{{ $task->body }}" class="w-full {{ $task->completed ? 'text-grey' : '' }}">
                                     <input name="completed" type="checkbox" onChange="this.form.submit()" {{ $task->completed ? 'checked' : '' }}>
                                 </div>
@@ -59,14 +60,14 @@
                         <button type="submit" class="button">Save</button>
                     </form>
 
-                    @include('errors')
+                    @include ('errors')
                 </div>
             </div>
+
             <div class="lg:w-1/4 px-3 lg:py-8">
                 @include ('projects.card')
                 @include ('projects.activity.card')
             </div>
         </div>
     </main>
-
 @endsection

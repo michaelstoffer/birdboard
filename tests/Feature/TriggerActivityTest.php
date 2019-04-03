@@ -3,31 +3,30 @@
 namespace Tests\Feature;
 
 use App\Task;
-use App\Project;
-use Tests\TestCase;
 use Facades\Tests\Setup\ProjectFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class TriggerActivityTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function creating_a_project()
+    function creating_a_project()
     {
         $project = ProjectFactory::create();
 
         $this->assertCount(1, $project->activity);
 
         tap($project->activity->last(), function ($activity) {
-            $this->assertEquals('created', $activity->description);
+            $this->assertEquals('created_project', $activity->description);
 
             $this->assertNull($activity->changes);
         });
     }
 
     /** @test */
-    public function updating_a_project()
+    function updating_a_project()
     {
         $project = ProjectFactory::create();
         $originalTitle = $project->title;
@@ -37,7 +36,7 @@ class TriggerActivityTest extends TestCase
         $this->assertCount(2, $project->activity);
 
         tap($project->activity->last(), function ($activity) use ($originalTitle) {
-            $this->assertEquals('updated', $activity->description);
+            $this->assertEquals('updated_project', $activity->description);
 
             $expected = [
                 'before' => ['title' => $originalTitle],
@@ -49,7 +48,7 @@ class TriggerActivityTest extends TestCase
     }
 
     /** @test */
-    public function creating_a_new_task()
+    function creating_a_new_task()
     {
         $project = ProjectFactory::create();
 
@@ -65,13 +64,13 @@ class TriggerActivityTest extends TestCase
     }
 
     /** @test */
-    public function completing_a_task()
+    function completing_a_task()
     {
         $project = ProjectFactory::withTasks(1)->create();
 
         $this->actingAs($project->owner)
             ->patch($project->tasks[0]->path(), [
-                'body' => 'Changed',
+                'body' => 'foobar',
                 'completed' => true
             ]);
 
@@ -84,37 +83,37 @@ class TriggerActivityTest extends TestCase
     }
 
     /** @test */
-    public function incompleting_a_task()
+    function incompleting_a_task()
     {
         $project = ProjectFactory::withTasks(1)->create();
 
         $this->actingAs($project->owner)
             ->patch($project->tasks[0]->path(), [
-                'body' => 'Changed',
+                'body' => 'foobar',
                 'completed' => true
             ]);
 
         $this->assertCount(3, $project->activity);
 
         $this->patch($project->tasks[0]->path(), [
-            'body' => 'Changed',
+            'body' => 'foobar',
             'completed' => false
         ]);
 
         $project->refresh();
 
         $this->assertCount(4, $project->activity);
+
         $this->assertEquals('incompleted_task', $project->activity->last()->description);
     }
 
     /** @test */
-    public function deleting_a_task()
+    function deleting_a_task()
     {
         $project = ProjectFactory::withTasks(1)->create();
 
         $project->tasks[0]->delete();
 
         $this->assertCount(3, $project->activity);
-        $this->assertEquals('deleted_task', $project->activity->last()->description);
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Project;
-use Illuminate\Http\Request;
 
 class ProjectsController extends Controller
 {
@@ -22,7 +21,6 @@ class ProjectsController extends Controller
     /**
      * Show a single project.
      *
-     * @param \App\Project $project
      * @param Project $project
      *
      * @return \Illuminate\Http\Response

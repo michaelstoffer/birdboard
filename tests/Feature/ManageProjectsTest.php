@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Project;
-use Tests\TestCase;
 use Facades\Tests\Setup\ProjectFactory;
+use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -18,13 +18,9 @@ class ManageProjectsTest extends TestCase
         $project = factory('App\Project')->create();
 
         $this->get('/projects')->assertRedirect('login');
-
         $this->get('/projects/create')->assertRedirect('login');
-
-        $this->get('/projects/edit')->assertRedirect('login');
-
+        $this->get($project->path().'/edit')->assertRedirect('login');
         $this->get($project->path())->assertRedirect('login');
-
         $this->post('/projects', $project->toArray())->assertRedirect('login');
     }
 
@@ -54,13 +50,13 @@ class ManageProjectsTest extends TestCase
     }
 
     /** @test */
-    public function a_user_can_update_a_project()
+    function a_user_can_update_a_project()
     {
         $project = ProjectFactory::create();
 
         $this->actingAs($project->owner)
-            ->patch($project->path(), $attributes = ['title' => 'Changed', 'description' => 'Changed', 'notes' => 'Changed'])
-            ->assertRedirect($project->path());
+             ->patch($project->path(), $attributes = ['title' => 'Changed', 'description' => 'Changed', 'notes' => 'Changed'])
+             ->assertRedirect($project->path());
 
         $this->get($project->path().'/edit')->assertOk();
 
@@ -68,13 +64,12 @@ class ManageProjectsTest extends TestCase
     }
 
     /** @test */
-    public function a_user_can_update_a_projects_general_notes()
+    function a_user_can_update_a_projects_general_notes()
     {
         $project = ProjectFactory::create();
 
         $this->actingAs($project->owner)
-            ->patch($project->path(), $attributes = ['notes' => 'Changed'])
-            ->assertRedirect($project->path());
+            ->patch($project->path(), $attributes = ['notes' => 'Changed']);
 
         $this->assertDatabaseHas('projects', $attributes);
     }
